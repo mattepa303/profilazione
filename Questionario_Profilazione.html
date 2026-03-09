@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionario di Profilazione dell'Investitore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:#2563eb;color:#fff}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:#f4f2ed;color:#1a1a2e;min-height:100vh;font-size:17px}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(37,99,235,.2);border-radius:3px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes checkAnim{from{stroke-dashoffset:50}to{stroke-dashoffset:0}}
+
+/* LANDING */
+.landing{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;background:linear-gradient(160deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%)}
+.landing-inner{max-width:600px;width:100%;animation:fadeUp .8s ease-out}
+.logo-ring{width:84px;height:84px;margin:0 auto 32px;border:2px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);font-size:34px;color:#e2e8f0;font-family:'Libre Baskerville',serif;font-weight:700}
+.brand-label{font-size:12px;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:24px;font-weight:500}
+.landing h1{font-family:'Libre Baskerville',serif;font-size:clamp(28px,5vw,44px);font-weight:400;line-height:1.25;margin-bottom:20px;color:#f8fafc}
+.landing .subtitle{font-size:17px;color:rgba(248,250,252,.55);line-height:1.75;font-weight:300;max-width:460px;margin:0 auto 40px}
+.pills{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
+.pill{padding:8px 20px;border-radius:30px;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.55);font-size:13px;letter-spacing:.5px}
+.btn-start{background:#2563eb;color:#fff;border:none;padding:18px 52px;border-radius:10px;font-size:15px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(37,99,235,.4)}
+.btn-start:hover{background:#1d4ed8;transform:translateY(-2px);box-shadow:0 8px 32px rgba(37,99,235,.5)}
+.confidential{margin-top:32px;font-size:12px;color:rgba(255,255,255,.2)}
+
+/* QUESTIONNAIRE LAYOUT */
+.app{display:none;flex-direction:column;min-height:100vh}
+.app.active{display:flex}
+header{padding:16px 28px;border-bottom:1px solid rgba(26,26,46,.08);display:flex;align-items:center;justify-content:space-between;background:#fff;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.07)}
+.header-left{display:flex;align-items:center;gap:14px}
+.header-logo{width:38px;height:38px;border:2px solid #2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;color:#2563eb;font-family:'Libre Baskerville',serif;font-weight:700}
+.header-brand{font-size:12px;letter-spacing:2px;color:#2563eb;font-weight:600;text-transform:uppercase}
+.header-sub{font-size:13px;color:#6b7280;font-weight:400;margin-top:1px}
+.header-right{display:flex;align-items:center;gap:16px}
+.pct-label{font-size:14px;color:#374151;font-weight:600}
+
+/* SECTION NAV */
+.section-nav{padding:10px 28px;overflow-x:auto;display:flex;gap:4px;border-bottom:1px solid #e5e7eb;background:#fff;-webkit-overflow-scrolling:touch}
+.section-nav::-webkit-scrollbar{height:0}
+.nav-btn{padding:9px 16px;border-radius:6px;border:none;background:transparent;color:#9ca3af;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.3px}
+.nav-btn.active{background:#eff6ff;color:#2563eb;font-weight:600}
+
+/* MAIN */
+main{flex:1;overflow-y:auto;padding:36px 28px 120px;max-width:760px;width:100%;margin:0 auto}
+.section-content{animation:fadeIn .35s ease-out}
+.sec-counter{font-size:12px;letter-spacing:3px;color:#2563eb;font-weight:600;text-transform:uppercase}
+.sec-title{font-family:'Libre Baskerville',serif;font-size:clamp(24px,4vw,34px);font-weight:400;margin-top:10px;line-height:1.3;color:#1a1a2e}
+.sec-subtitle{font-size:16px;color:#6b7280;margin-top:10px;font-weight:400;line-height:1.65}
+
+/* OBJECTIVE BOX */
+.obj-box{margin-top:20px;margin-bottom:4px;padding:16px 20px;border-radius:10px;background:#eff6ff;border-left:4px solid #2563eb;display:flex;gap:12px;align-items:flex-start}
+.obj-icon{font-size:16px;margin-top:1px;flex-shrink:0}
+.obj-text{font-size:15px;color:#1e40af;font-weight:500;line-height:1.55}
+.obj-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3b82f6;margin-bottom:4px}
+
+/* FIELDS */
+.fields-group{display:flex;flex-direction:column;gap:22px;margin-top:28px}
+.field-label{display:block;font-size:14px;color:#374151;font-weight:600;margin-bottom:8px;letter-spacing:.3px}
+.field-label .req{color:#2563eb}
+.text-input{width:100%;padding:14px 18px;background:#fff;border:1.5px solid #d1d5db;border-radius:10px;color:#1a1a2e;font-size:16px;font-family:'Source Sans 3',sans-serif;transition:border-color .2s;outline:none}
+.text-input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.text-input::placeholder{color:#d1d5db}
+
+/* QUESTIONS */
+.questions-group{display:flex;flex-direction:column;gap:28px;margin-top:24px}
+.q-card{padding:28px;border-radius:14px;background:#fff;border:1.5px solid #e5e7eb;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+.q-header{display:flex;gap:14px;margin-bottom:18px}
+.q-id{font-size:12px;font-weight:700;color:#2563eb;letter-spacing:1px;min-width:30px;padding-top:4px;font-family:'Source Sans 3',sans-serif}
+.q-text{font-size:17px;font-weight:500;line-height:1.55;color:#1a1a2e}
+.q-note{font-size:13px;color:#9ca3af;margin-top:8px;font-weight:400;font-style:italic;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:10px;margin-left:44px}
+.opt{padding:14px 18px;border-radius:10px;border:1.5px solid #e5e7eb;background:#fafafa;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s}
+.opt:hover{border-color:#93c5fd;background:#eff6ff}
+.opt.selected{border-color:#2563eb;background:#eff6ff}
+.radio{width:20px;height:20px;border-radius:50%;flex-shrink:0;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.opt.selected .radio{border:2px solid #2563eb}
+.radio-dot{width:9px;height:9px;border-radius:50%;background:#2563eb;display:none}
+.opt.selected .radio-dot{display:block}
+.check{width:20px;height:20px;border-radius:5px;flex-shrink:0;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:12px;font-weight:700;color:#2563eb}
+.opt.selected .check{border:2px solid #2563eb;background:#dbeafe}
+.opt-label{font-size:16px;color:#4b5563;font-weight:400;line-height:1.45}
+.opt.selected .opt-label{color:#1a1a2e;font-weight:500}
+.opt-sublabel{font-size:13px;color:#60a5fa;margin-top:4px}
+.detail-input{width:calc(100% - 34px);padding:11px 16px;margin-top:8px;margin-left:34px;background:#fff;border:1.5px solid #d1d5db;border-radius:8px;color:#1a1a2e;font-size:14px;font-family:'Source Sans 3',sans-serif;outline:none}
+.detail-input:focus{border-color:#2563eb}
+textarea.text-input{resize:vertical;line-height:1.65;min-height:110px}
+.free-fields{display:flex;flex-direction:column;gap:18px;margin-left:44px}
+.free-label{font-size:14px;color:#374151;font-weight:500;margin-bottom:6px}
+.free-input{width:100%;max-width:300px;padding:13px 18px;background:#fff;border:1.5px solid #d1d5db;border-radius:10px;color:#1a1a2e;font-size:15px;font-family:'Source Sans 3',sans-serif;outline:none}
+.free-input:focus{border-color:#2563eb}
+
+/* FOOTER */
+footer{padding:16px 28px;border-top:1px solid #e5e7eb;background:#fff;display:flex;justify-content:space-between;align-items:center;position:sticky;bottom:0;z-index:100;box-shadow:0 -1px 8px rgba(0,0,0,.06)}
+.btn-nav{padding:13px 26px;border-radius:10px;font-size:14px;font-family:'Source Sans 3',sans-serif;cursor:pointer;transition:all .2s;font-weight:500}
+.btn-prev{border:1.5px solid #d1d5db;background:#fff;color:#6b7280}
+.btn-prev:disabled{color:#d1d5db;cursor:not-allowed;border-color:#f3f4f6}
+.btn-next{border:none;background:#eff6ff;color:#2563eb;font-weight:600}
+.btn-submit{border:none;background:#2563eb;color:#fff;font-weight:600;letter-spacing:.5px;padding:13px 30px;border-radius:10px;font-size:14px;font-family:'Source Sans 3',sans-serif;cursor:pointer;box-shadow:0 2px 12px rgba(37,99,235,.35)}
+.dots{display:flex;gap:5px;align-items:center}
+.dot{height:6px;border-radius:3px;background:#e5e7eb;transition:all .3s}
+.dot.active{width:24px;background:#2563eb}
+.dot.done{background:#bfdbfe}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px}
+.modal-overlay.active{display:flex}
+.modal{background:#fff;border:1.5px solid #e5e7eb;border-radius:18px;padding:40px 36px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal h3{color:#1a1a2e;font-size:22px;font-family:'Libre Baskerville',serif;font-weight:400;margin-bottom:10px}
+.modal p{color:#6b7280;font-size:15px;margin-bottom:24px;line-height:1.65}
+.modal label{display:block;color:#374151;font-size:13px;margin-bottom:8px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
+.modal-email{width:100%;padding:14px 16px;background:#f9fafb;border:1.5px solid #d1d5db;border-radius:10px;color:#1a1a2e;font-size:16px;outline:none;font-family:'Source Sans 3',sans-serif;margin-bottom:24px}
+.modal-email:focus{border-color:#2563eb}
+.modal-btns{display:flex;gap:12px}
+.btn-cancel{flex:1;padding:14px;background:#fff;border:1.5px solid #d1d5db;border-radius:10px;color:#6b7280;font-size:14px;cursor:pointer;font-family:'Source Sans 3',sans-serif}
+.btn-send{flex:2;padding:14px;background:#2563eb;border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif}
+.btn-action-primary{display:flex;align-items:center;gap:10px;width:100%;padding:15px 20px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;font-family:'Source Sans 3',sans-serif;cursor:pointer;transition:all .2s;justify-content:center}
+.btn-action-primary:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,235,.35)}
+.btn-action-secondary{display:flex;align-items:center;gap:10px;width:100%;padding:15px 20px;background:#fff;color:#2563eb;border:1.5px solid #2563eb;border-radius:10px;font-size:15px;font-weight:600;font-family:'Source Sans 3',sans-serif;cursor:pointer;transition:all .2s;justify-content:center}
+.btn-action-secondary:hover{background:#eff6ff}
+.btn-action-secondary.copied{background:#dcfce7;border-color:#16a34a;color:#16a34a}
+
+/* THANK YOU */
+.thankyou{display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px;text-align:center;background:#f4f2ed}
+.thankyou.active{display:flex}
+.thankyou-inner{max-width:500px;animation:fadeUp .8s ease-out}
+.check-ring{width:84px;height:84px;margin:0 auto 32px;border:2px solid #2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eff6ff}
+.thankyou h2{font-family:'Libre Baskerville',serif;font-size:32px;font-weight:400;margin-bottom:16px;color:#1a1a2e}
+.thankyou p{font-size:16px;color:#6b7280;line-height:1.7;font-weight:400}
+
+@media(max-width:600px){
+  main{padding:24px 16px 120px}
+  .opts{margin-left:0}
+  .q-header{flex-direction:column;gap:4px}
+  .q-id{min-width:auto}
+  footer{padding:12px 16px}
+  .dots{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LANDING ===== -->
+<div class="landing" id="landing">
+  <div class="landing-inner">
+    <div class="logo-ring">Q</div>
+    <div class="brand-label">Questionario di Profilazione</div>
+    <h1>Questionario di<br>Profilazione dell'Investitore</h1>
+    <p class="subtitle">Analisi del Profilo di Rischio e delle Esigenze Finanziarie. Non esistono risposte giuste o sbagliate — La preghiamo di rispondere con la massima sincerità.</p>
+    <div class="pills">
+      <span class="pill">8 Sezioni</span>
+      <span class="pill">~15 minuti</span>
+      <span class="pill">Riservato</span>
+    </div>
+    <button class="btn-start" onclick="startQuestionnaire()">Inizia il Questionario</button>
+    <p class="confidential">Documento riservato e confidenziale</p>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div class="app" id="app">
+  <header>
+    <div class="header-left">
+      <div class="header-logo">Q</div>
+      <div>
+        <div class="header-brand">Profilazione</div>
+        <div class="header-sub">Questionario Investitore</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="pct-label" id="pctLabel">0%</span>
+      <svg id="progressRing" width="48" height="48" style="transform:rotate(-90deg)">
+        <circle cx="24" cy="24" r="21" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="3"/>
+        <circle id="progressArc" cx="24" cy="24" r="21" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="131.95" stroke-dashoffset="131.95" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)"/>
+      </svg>
+    </div>
+  </header>
+  <div class="section-nav" id="sectionNav"></div>
+  <main id="mainContent"></main>
+  <footer>
+    <button class="btn-nav btn-prev" id="btnPrev" onclick="goPrev()">← Precedente</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn-nav btn-next" id="btnNext" onclick="goNext()">Successivo →</button>
+  </footer>
+</div>
+
+<!-- ===== COMPLETION MODAL ===== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div style="width:52px;height:52px;border-radius:50%;background:#eff6ff;border:2px solid #2563eb;display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <h3>Questionario completato</h3>
+    <p>Scarichi il file con le Sue risposte e copi il codice dati da consegnare al consulente.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+      <button onclick="scaricaTxt()" class="btn-action-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Scarica il file .txt
+      </button>
+      <button onclick="copiaCodice()" class="btn-action-secondary" id="btnCopiaCodice">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copia codice per Google Sheet
+      </button>
+    </div>
+    <button onclick="closeModal()" style="margin-top:16px;width:100%;padding:11px;background:transparent;border:1.5px solid #e5e7eb;border-radius:10px;color:#9ca3af;font-size:14px;font-family:'Source Sans 3',sans-serif;cursor:pointer">Chiudi</button>
+  </div>
+</div>
+
+<!-- ===== THANK YOU ===== -->
+<div class="thankyou" id="thankyou">
+  <div class="thankyou-inner">
+    <div class="check-ring">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round">
+        <path d="M5 13l4 4L19 7" style="stroke-dasharray:50;animation:checkAnim .6s ease-out .3s both"/>
+      </svg>
+    </div>
+    <h2>Grazie per la collaborazione</h2>
+    <p>Il questionario è stato completato correttamente. Il file è stato scaricato e il codice copiato è pronto da consegnare al consulente.</p>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  DATA — complete questionnaire structure
+// ============================================================
+const SECTIONS = [
+  {
+    id:"anagrafica", title:"Dati", icon:"👤",
+    fields:[
+      {id:"nome",label:"Nome",type:"text",required:true},
+      {id:"contatto",label:"E-mail",type:"email",required:true}
+    ]
+  },
+  {
+    id:"sezione_a", title:"Sezione A – Situazione Patrimoniale e Reddituale",
+    subtitle:"Comprendere la Sua reale capacità finanziaria di sostenere il rischio.", icon:"💰",
+    objective:"Comprendere la Sua reale capacità finanziaria di sostenere il rischio.",
+    questions:[
+      {id:"A1",text:"Qual è il Suo reddito annuo netto complessivo (da tutte le fonti)?",opts:[
+        {l:"Inferiore a 25.000 €",v:1},{l:"Tra 25.000 € e 50.000 €",v:2},{l:"Tra 50.000 € e 100.000 €",v:3},{l:"Superiore a 100.000 €",v:4}]},
+      {id:"A2",text:"Come giudica la stabilità delle Sue fonti di reddito nei prossimi 3-5 anni?",opts:[
+        {l:"Molto instabile (lavoro precario, settore in crisi, reddito altamente variabile)",v:1},{l:"Abbastanza instabile (contratto a termine, reddito parzialmente variabile)",v:2},{l:"Stabile (impiego fisso, professione ben avviata)",v:3},{l:"Molto stabile (dipendente pubblico, rendite passive consolidate, pensione)",v:4}]},
+      {id:"A3",text:"Qual è il valore approssimativo del Suo patrimonio finanziario complessivo (escluso l'immobile di residenza)?",opts:[
+        {l:"Inferiore a 50.000 €",v:1},{l:"Tra 50.000 € e 200.000 €",v:2},{l:"Tra 200.000 € e 500.000 €",v:3},{l:"Superiore a 500.000 €",v:4}]},
+      {id:"A4",text:"Quale percentuale del Suo patrimonio complessivo intende destinare a questo investimento?",opts:[
+        {l:"Più del 70% (quasi totalità dei risparmi)",v:1},{l:"Tra il 40% e il 70%",v:2},{l:"Tra il 15% e il 40%",v:3},{l:"Meno del 15%",v:4}]},
+      {id:"A5",text:"Dispone di un fondo di emergenza (liquidità prontamente disponibile per imprevisti, pari ad almeno 6 mesi di spese correnti)?",opts:[
+        {l:"No, non ho risparmi di emergenza",v:1},{l:"Ho una piccola riserva, ma inferiore a 3 mesi di spese",v:2},{l:"Sì, tra 3 e 6 mesi di spese",v:3},{l:"Sì, superiore a 6 mesi di spese",v:4}]},
+      {id:"A6",text:"Ha debiti significativi in corso (mutuo escluso)?",opts:[
+        {l:"Sì, debiti rilevanti con rate che pesano sul bilancio mensile",v:1},{l:"Sì, debiti moderati ma gestibili",v:2},{l:"Solo il mutuo sulla prima casa",v:3},{l:"Nessun debito significativo",v:4}]}
+    ]
+  },
+  {
+    id:"sezione_b", title:"Sezione B – Orizzonte Temporale e Obiettivi",
+    subtitle:"Identificare le vere finalità dell'investimento e i vincoli temporali.", icon:"🎯",
+    objective:"Identificare le vere finalità dell'investimento e i vincoli temporali.",
+    questions:[
+      {id:"B1",text:"Tra quanto tempo prevede di aver bisogno di tutto o gran parte del capitale investito?",opts:[
+        {l:"Entro 1 anno",v:1},{l:"Tra 1 e 3 anni",v:2},{l:"Tra 3 e 7 anni",v:3},{l:"Oltre 7 anni (o non ho necessità specifiche di liquidare)",v:4}]},
+      {id:"B2",text:"Qual è l'obiettivo PRIMARIO di questo investimento?",opts:[
+        {l:"Proteggere il capitale dall'inflazione, senza oscillazioni significative",v:1},{l:"Generare un reddito periodico stabile (cedole, dividendi)",v:2},{l:"Far crescere il capitale nel medio-lungo termine, accettando oscillazioni moderate",v:3},{l:"Massimizzare la crescita nel lungo termine, anche con forte volatilità",v:4}]},
+      {id:"B3",text:"Ha obiettivi finanziari specifici legati a questo investimento?",type:"multi",
+        note:"Può selezionare più opzioni e specificare importo/tempistica dove richiesto.",
+        opts:[
+          {l:"Acquisto immobile",v:"immobile",detail:"Importo stimato e tempistica"},
+          {l:"Studi dei figli",v:"studi",detail:"Importo stimato e tempistica"},
+          {l:"Integrazione pensionistica",v:"pensione",detail:"Reddito mensile desiderato"},
+          {l:"Creazione/espansione attività imprenditoriale",v:"impresa"},
+          {l:"Fondo per spese mediche o assistenziali future",v:"medico"},
+          {l:"Accumulazione generica di ricchezza",v:"generica"},
+          {l:"Trasferimento patrimoniale generazionale",v:"eredita"},
+          {l:"Altro",v:"altro",detail:"Specificare"}
+        ]},
+      {id:"B4",text:"Nel corso dell'investimento, avrà bisogno di effettuare prelievi regolari dal portafoglio?",opts:[
+        {l:"Sì, prelievi frequenti (mensili/trimestrali)",v:1},{l:"Potrei aver bisogno di prelievi occasionali",v:2},{l:"Improbabile, ma non posso escluderlo",v:3},{l:"No, il capitale resterà interamente investito",v:4}]}
+    ]
+  },
+  {
+    id:"sezione_c", title:"Sezione C – Tolleranza Psicologica al Rischio",
+    subtitle:"Misurare la Sua reale reazione emotiva alla volatilità, oltre le dichiarazioni di principio.", icon:"🧠",
+    objective:"Misurare la Sua reale reazione emotiva alla volatilità, oltre le dichiarazioni di principio.",
+    questions:[
+      {id:"C1",text:"Immagini di aver investito 100.000 €. Dopo 3 mesi il portafoglio vale 82.000 € (−18%). Qual è la Sua reazione più probabile?",
+        note:"Risponda pensando a cosa farebbe DAVVERO, non a cosa sarebbe \"razionale\" fare.",
+        opts:[
+          {l:"Vendo tutto immediatamente. Non riesco a dormire con perdite del genere.",v:1},
+          {l:"Vendo una parte per ridurre l'ansia e limito ulteriori danni.",v:2},
+          {l:"Non faccio nulla, ma controllo il portafoglio quotidianamente con apprensione.",v:3},
+          {l:"Mantengo la posizione con tranquillità, capisco che i mercati oscillano.",v:4},
+          {l:"Investo ulteriormente: se la strategia era valida prima, lo è ancora di più a prezzi più bassi.",v:5}
+        ]},
+      {id:"C2",text:"Pensi al peggior investimento che ha fatto in passato (o immagini di farlo). Come ha reagito o reagirebbe?",opts:[
+        {l:"Non ho mai investito in strumenti rischiosi e preferisco evitarlo.",v:1},
+        {l:"Ho venduto in perdita perché l'ansia era insopportabile.",v:2},
+        {l:"Ho mantenuto, ma con grande stress e notti insonni.",v:3},
+        {l:"Ho mantenuto con relativa calma, confidando nel recupero.",v:4},
+        {l:"Ho aumentato la posizione e alla fine ha funzionato.",v:5}]},
+      {id:"C3",text:"Come reagisce quando sente notizie molto negative sui mercati finanziari?",opts:[
+        {l:"Provo forte ansia e desidero disinvestire tutto il prima possibile.",v:1},
+        {l:"Mi preoccupo parecchio e valuto di ridurre l'esposizione.",v:2},
+        {l:"Seguo con attenzione ma non cambio strategia d'impulso.",v:3},
+        {l:"Considero i cali come opportunità di acquisto.",v:4}]},
+      {id:"C4",text:"Quale affermazione riflette meglio il Suo atteggiamento verso il denaro?",opts:[
+        {l:"Il denaro è sicurezza: la priorità assoluta è non perdere mai nulla.",v:1},
+        {l:"Preferisco guadagnare poco ma in modo prevedibile.",v:2},
+        {l:"Accetto oscillazioni moderate in cambio di rendimenti superiori nel tempo.",v:3},
+        {l:"Sono disposto a sopportare perdite significative per rendimenti elevati.",v:4}]},
+      {id:"C5",text:"Le viene proposto un investimento con queste possibilità nei prossimi 12 mesi. Quale profilo sceglie?",type:"scenario",opts:[
+        {l:"Profilo A",sub:"Peggiore −2% · Probabile +3% · Migliore +5%",v:1},
+        {l:"Profilo B",sub:"Peggiore −10% · Probabile +6% · Migliore +12%",v:2},
+        {l:"Profilo C",sub:"Peggiore −20% · Probabile +10% · Migliore +25%",v:3},
+        {l:"Profilo D",sub:"Peggiore −35% · Probabile +15% · Migliore +45%",v:4}]},
+      {id:"C6",text:"Con che frequenza controlla il valore dei Suoi investimenti?",opts:[
+        {l:"Più volte al giorno",v:1},{l:"Ogni giorno o quasi",v:2},{l:"Settimanalmente",v:3},{l:"Mensilmente o meno",v:4}]}
+    ]
+  },
+  {
+    id:"sezione_d", title:"Sezione D – Esperienza e Conoscenza Finanziaria",
+    subtitle:"Valutare la reale consapevolezza finanziaria per evitare disallineamenti tra aspettative e realtà.", icon:"📊",
+    objective:"Valutare la reale consapevolezza finanziaria per evitare disallineamenti tra aspettative e realtà.",
+    questions:[
+      {id:"D1",text:"Da quanti anni investe in strumenti finanziari?",opts:[
+        {l:"Non ho mai investito (al di fuori di conti deposito)",v:1},{l:"Da meno di 3 anni",v:2},{l:"Tra 3 e 10 anni",v:3},{l:"Oltre 10 anni",v:4}]},
+      {id:"D2",text:"In quali strumenti ha esperienza diretta?",type:"multi",note:"Selezioni tutti quelli applicabili.",opts:[
+        {l:"Conti deposito / Libretti postali",v:"deposito"},
+        {l:"Titoli di Stato (BTP, BOT, Bund)",v:"titoli_stato"},
+        {l:"Obbligazioni corporate",v:"obbligazioni"},
+        {l:"Fondi comuni / SICAV",v:"fondi"},
+        {l:"ETF (azionari, obbligazionari, tematici)",v:"etf"},
+        {l:"Azioni singole",v:"azioni"},
+        {l:"Certificati / Prodotti strutturati",v:"certificati"},
+        {l:"Derivati (opzioni, futures, CFD)",v:"derivati"},
+        {l:"Criptovalute",v:"crypto"},
+        {l:"Private equity / Venture capital / Alternativi",v:"pe"}]},
+      {id:"D3",text:"Se un'obbligazione con cedola fissa del 3% viene acquistata a 100 e i tassi di mercato salgono al 5%, cosa accade al prezzo?",opts:[
+        {l:"Il prezzo sale, perché i tassi più alti rendono tutto più attraente",v:0},
+        {l:"Il prezzo non cambia, perché la cedola resta del 3%",v:0},
+        {l:"Il prezzo scende, perché le nuove obbligazioni offrono rendimenti superiori",v:2},
+        {l:"Non saprei",v:0}]},
+      {id:"D4",text:"Un ETF azionario globale (MSCI World). Nei suoi peggiori drawdown storici, quanto ha perso?",opts:[
+        {l:"Circa −5/−10%",v:0},{l:"Circa −15/−25%",v:0},{l:"Circa −30/−40%",v:0},{l:"Oltre −50%",v:2},{l:"Non saprei",v:0}]}
+    ]
+  },
+  {
+    id:"sezione_e", title:"Sezione E – Bias Comportamentali e Coerenza",
+    subtitle:"Identificare bias cognitivi e verificare la coerenza tra dichiarazioni e comportamento reale.", icon:"🔍",
+    objective:"Identificare bias cognitivi e verificare la coerenza tra dichiarazioni e comportamento reale.",
+    questions:[
+      {id:"E1",text:"Un amico fidato Le racconta di aver guadagnato il 40% in pochi mesi. Qual è la Sua reazione?",opts:[
+        {l:"Voglio fare lo stesso investimento immediatamente.",v:1},
+        {l:"Sono molto interessato e cerco di replicare l'operazione.",v:2},
+        {l:"Mi informo, ma so che i rendimenti passati non garantiscono quelli futuri.",v:3},
+        {l:"Sono scettico: rendimenti così alti implicano rischi elevati.",v:4}]},
+      {id:"E2",text:"Pensi a un investimento che ha fatto bene in passato. Tende a pensare che:",opts:[
+        {l:"\"Avevo capito che sarebbe andato bene, ho un buon fiuto.\"",v:1},
+        {l:"\"È andata bene, ma c'era anche una componente di fortuna.\"",v:3}]},
+      {id:"E3",text:"Di fronte a una perdita su un singolo titolo, qual è il Suo comportamento più tipico?",opts:[
+        {l:"Mantengo il titolo sperando che recuperi, anche se i fondamentali sono peggiorati.",v:1},
+        {l:"Tendo ad aggiungere posizione per \"mediare\" il prezzo.",v:1},
+        {l:"Valuto oggettivamente se i motivi dell'investimento sono ancora validi.",v:4},
+        {l:"Vendo subito, non sopporto vedere perdite nel portafoglio.",v:2}]},
+      {id:"E4",text:"Un consulente Le propone di vendere un titolo in guadagno +30% per un'opportunità migliore. Lei:",opts:[
+        {l:"Preferisco tenere il titolo in guadagno.",v:1},
+        {l:"Vendo metà posizione per \"portare a casa\" parte del guadagno.",v:2},
+        {l:"Se le prospettive della nuova opportunità sono migliori, vendo e riallocco.",v:4}]},
+      {id:"E5",text:"Qual è il rendimento annuo che si aspetta REALISTICAMENTE dal Suo portafoglio?",type:"freetext",
+        note:"Risponda con sincerità: serve a verificare se le aspettative sono allineate alla realtà.",
+        fields:[
+          {id:"rendimento_atteso",label:"Rendimento annuo atteso netto (%)",ph:"es. 5"},
+          {id:"perdita_max",label:"Perdita massima accettabile in un anno (%)",ph:"es. -10"}]}
+    ]
+  },
+  {
+    id:"sezione_f", title:"Sezione F – Preferenze di Investimento e Vincoli",
+    subtitle:"Recepire preferenze specifiche che influenzano la costruzione del portafoglio.", icon:"⚙️",
+    objective:"Recepire preferenze specifiche che influenzano la costruzione del portafoglio.",
+    questions:[
+      {id:"F1",text:"Ha preferenze o esclusioni specifiche?",type:"multi",opts:[
+        {l:"Escludo armi, tabacco, gioco d'azzardo (criteri ESG/etici)",v:"esg"},
+        {l:"Escludo criptovalute",v:"no_crypto"},
+        {l:"Escludo mercati emergenti",v:"no_em"},
+        {l:"Preferisco strumenti a distribuzione (cedole/dividendi)",v:"distribuzione"},
+        {l:"Preferisco strumenti ad accumulazione",v:"accumulazione"},
+        {l:"Preferisco strumenti denominati in Euro (no rischio cambio)",v:"eur"},
+        {l:"Nessuna preferenza o esclusione particolare",v:"nessuna"},
+        {l:"Altro",v:"altro",detail:"Specificare"}]},
+      {id:"F2",text:"Quanto è importante per Lei la liquidità dell'investimento?",opts:[
+        {l:"Fondamentale: devo poter liquidare in qualsiasi momento",v:1},
+        {l:"Importante, ma accetto vincoli temporali di qualche mese",v:2},
+        {l:"Non prioritaria: posso tollerare lock-up fino a 1-2 anni",v:3},
+        {l:"Irrilevante: il denaro investito non mi serve per molti anni",v:4}]},
+      {id:"F3",text:"Come preferisce essere informato sull'andamento del portafoglio?",opts:[
+        {l:"Report mensile dettagliato con analisi di performance",v:"mensile"},
+        {l:"Report trimestrale sintetico",v:"trimestrale"},
+        {l:"Aggiornamenti solo in caso di variazioni significative",v:"variazioni"},
+        {l:"Report annuale in sede di revisione strategica",v:"annuale"}]},
+      {id:"F4",text:"In caso di forte discesa dei mercati, preferisce che il consulente:",opts:[
+        {l:"Mi contatti immediatamente per discutere eventuali azioni",v:"contatto"},
+        {l:"Mi invii una nota di commento ma senza allarmarmi",v:"nota"},
+        {l:"Agisca autonomamente secondo la strategia, informandomi dopo",v:"autonomo"},
+        {l:"Non faccia nulla, mi fido della strategia di lungo termine",v:"nulla"}]}
+    ]
+  },
+  {
+    id:"sezione_h", title:"Sezione H – Personalità Finanziaria",
+    subtitle:"Identificare l'archetipo di personalità finanziaria del cliente per personalizzare la costruzione del portafoglio e la modalità di comunicazione consulenziale.", icon:"🧩",
+    objective:"Identificare l'archetipo di personalità finanziaria del cliente per personalizzare la costruzione del portafoglio e la modalità di comunicazione consulenziale.",
+    questions:[
+      {id:"H1",text:"Quale frase descrive meglio il Suo rapporto con le decisioni finanziarie?",opts:[
+        {l:"Voglio capire tutto nel dettaglio prima di decidere. Studio, leggo, confronto. Decido io.",v:"IND"},
+        {l:"Mi affido a un professionista di fiducia. Non ho tempo né voglia di seguire i mercati.",v:"DEL"},
+        {l:"Mi piace avere un piano chiaro con obiettivi e scadenze definite.",v:"PIA"},
+        {l:"Seguo l'istinto e il momento. Quando vedo un'opportunità, agisco rapidamente.",v:"OPP"},
+        {l:"La cosa più importante è non perdere mai. Preferisco rinunciare a guadagnare.",v:"GUA"},
+        {l:"Ne parlo con familiari e amici. Le opinioni degli altri contano molto.",v:"SOC"}]},
+      {id:"H2",text:"In una riunione con il Suo consulente finanziario, quale situazione La descrive meglio?",opts:[
+        {l:"Arrivo preparato con domande specifiche, grafici e notizie.",v:"IND"},
+        {l:"Ascolto le raccomandazioni e di solito le accetto.",v:"DEL"},
+        {l:"Chiedo sempre: \"Siamo in linea con il piano?\"",v:"PIA"},
+        {l:"Chiedo quali sono le opportunità del momento.",v:"OPP"},
+        {l:"Chiedo soprattutto rassicurazioni: \"Il capitale è al sicuro?\"",v:"GUA"},
+        {l:"Racconto cosa dicono i colleghi o cosa fanno gli altri investitori.",v:"SOC"}]},
+      {id:"H3",text:"Come si sente quando il Suo portafoglio guadagna significativamente (+15% in un anno)?",opts:[
+        {l:"Analizzo le ragioni del guadagno e valuto se ribilanciare.",v:"IND"},
+        {l:"Bene, ma non ci penso troppo. Mi fido del consulente.",v:"DEL"},
+        {l:"Soddisfatto, ma verifico se è in linea con il piano.",v:"PIA"},
+        {l:"Eccitato, e cerco di capire dove investire di più.",v:"OPP"},
+        {l:"Sollevato più che contento. Meglio vendere prima che cambi.",v:"GUA"},
+        {l:"Ne parlo con amici e familiari. Mi fa piacere condividere.",v:"SOC"}]},
+      {id:"H4",text:"Quando sente parlare di una nuova tendenza (es. IA, cripto, energia green), la Sua reazione è:",opts:[
+        {l:"Studio approfonditamente il tema prima di trarre conclusioni.",v:"IND"},
+        {l:"Chiedo al consulente se è rilevante per il mio portafoglio.",v:"DEL"},
+        {l:"Valuto se rientra nella mia strategia e asset allocation.",v:"PIA"},
+        {l:"Mi entusiasmo e voglio allocare subito una parte.",v:"OPP"},
+        {l:"Diffido. Le novità sono spesso bolle.",v:"GUA"},
+        {l:"Ne discuto con persone fidate. Se anche loro sono interessati, mi convinco.",v:"SOC"}]},
+      {id:"H5",text:"Se potesse scegliere UN SOLO aggettivo per descrivere come vorrebbe gestito il Suo denaro:",opts:[
+        {l:"Trasparente – Voglio capire ogni scelta e il perché.",v:"IND"},
+        {l:"Semplice – Non voglio complicazioni, fate voi.",v:"DEL"},
+        {l:"Disciplinato – Un piano chiaro, rispettato senza eccezioni.",v:"PIA"},
+        {l:"Dinamico – Pronto a cogliere le opportunità.",v:"OPP"},
+        {l:"Sicuro – Nessuna sorpresa, nessuna perdita.",v:"GUA"},
+        {l:"Condiviso – Deciso insieme, con dialogo costante.",v:"SOC"}]},
+      {id:"H6",text:"Pensi al denaro nella Sua vita quotidiana. Quale affermazione La rappresenta di più?",opts:[
+        {l:"Il denaro è uno strumento da ottimizzare razionalmente.",v:"IND"},
+        {l:"Il denaro serve a vivere bene, non voglio che diventi una preoccupazione.",v:"DEL"},
+        {l:"Il denaro va pianificato: budget, obiettivi, risparmio programmato.",v:"PIA"},
+        {l:"Il denaro è un mezzo per cogliere opportunità. Chi non risica, non rosica.",v:"OPP"},
+        {l:"Il denaro è sicurezza. La priorità è avere sempre una rete di protezione.",v:"GUA"},
+        {l:"Il denaro conta per le relazioni che permette.",v:"SOC"}]}
+    ]
+  },
+  {
+    id:"sezione_i", title:"Sezione I – Domande Aperte",
+    subtitle:"Far emergere informazioni qualitative che le domande strutturate non catturano.", icon:"✍️",
+    objective:"Far emergere informazioni qualitative che le domande strutturate non catturano.",
+    questions:[
+      {id:"I1",text:"Descriva con parole Sue cosa significa per Lei \"investire bene\".",type:"textarea"},
+      {id:"I2",text:"C'è qualcosa che la spaventa particolarmente riguardo ai mercati finanziari o al fatto di investire?",type:"textarea"},
+      {id:"I3",text:"Ha avuto esperienze negative con investimenti o consulenti in passato? Se sì, ci racconti brevemente.",type:"textarea"},
+      {id:"I4",text:"C'è qualcos'altro che ritiene importante farci sapere per la gestione del Suo patrimonio?",type:"textarea"}
+    ]
+  }
+];
+
+// ============================================================
+//  STATE
+// ============================================================
+let currentSection = 0;
+const answers = {};      // id → value
+const multiAnswers = {}; // qId → [values]
+const multiDetails = {}; // qId_val → string
+
+// ============================================================
+//  NAVIGATION
+// ============================================================
+function startQuestionnaire(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('app').classList.add('active');
+  buildNav();
+  renderSection();
+}
+
+function buildNav(){
+  const nav=document.getElementById('sectionNav');
+  nav.innerHTML=SECTIONS.map((s,i)=>`<button class="nav-btn${i===0?' active':''}" data-i="${i}" onclick="goToSection(${i})">${s.icon} ${s.title.split('–')[0].trim()}</button>`).join('');
+  buildDots();
+}
+
+function buildDots(){
+  const d=document.getElementById('dots');
+  d.innerHTML=SECTIONS.map((_,i)=>`<div class="dot${i===currentSection?' active':i<currentSection?' done':''}" style="width:${i===currentSection?24:6}px"></div>`).join('');
+}
+
+function goToSection(i){
+  currentSection=i;
+  renderSection();
+  document.getElementById('mainContent').scrollTop=0;
+}
+function goNext(){if(currentSection<SECTIONS.length-1){currentSection++;renderSection();document.getElementById('mainContent').scrollTop=0;}}
+function goPrev(){if(currentSection>0){currentSection--;renderSection();document.getElementById('mainContent').scrollTop=0;}}
+
+// updateUI is defined in the SUBMISSION section below
+
+// ============================================================
+//  RENDERING
+// ============================================================
+function renderSection(){
+  const s=SECTIONS[currentSection];
+  const main=document.getElementById('mainContent');
+  let html=`<div class="section-content">
+    <div style="margin-bottom:32px">
+      <span class="sec-counter">${currentSection+1} / ${SECTIONS.length}</span>
+      <h2 class="sec-title">${s.title}</h2>
+      ${s.subtitle?`<p class="sec-subtitle">${s.subtitle}</p>`:''}
+
+    </div>`;
+
+  // fields (anagrafica)
+  if(s.fields){
+    html+=`<div class="fields-group">`;
+    s.fields.forEach(f=>{
+      html+=`<div>
+        <label class="field-label">${f.label}${f.required?' <span class="req">*</span>':''}</label>
+        <input class="text-input" type="${f.type}" id="field_${f.id}" value="${answers[f.id]||''}" onchange="answers['${f.id}']=this.value;updateUI()" placeholder="">
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  // questions
+  if(s.questions){
+    html+=`<div class="questions-group">`;
+    s.questions.forEach(q=>{
+      html+=`<div class="q-card"><div class="q-header"><span class="q-id">${q.id}</span><div><p class="q-text">${q.text}</p>${q.note?`<p class="q-note">${q.note}</p>`:''}</div></div>`;
+
+      if(q.type==='textarea'){
+        html+=`<textarea class="text-input" rows="4" placeholder="Scriva qui la Sua risposta..." onchange="answers['${q.id}']=this.value;updateUI()">${answers[q.id]||''}</textarea>`;
+      }
+      else if(q.type==='freetext'){
+        html+=`<div class="free-fields">`;
+        q.fields.forEach(f=>{
+          html+=`<div><div class="free-label">${f.label}</div><input class="free-input" type="text" placeholder="${f.ph||''}" value="${answers[f.id]||''}" onchange="answers['${f.id}']=this.value;updateUI()"></div>`;
+        });
+        html+=`</div>`;
+      }
+      else if(q.type==='multi'){
+        html+=`<div class="opts">`;
+        q.opts.forEach((o,oi)=>{
+          const sel=(multiAnswers[q.id]||[]).includes(o.v);
+          html+=`<div>
+            <div class="opt${sel?' selected':''}" onclick="toggleMulti('${q.id}','${o.v}');renderSection()">
+              <div class="check">${sel?'✓':''}</div>
+              <span class="opt-label">${o.l}</span>
+            </div>
+            ${o.detail&&sel?`<input class="detail-input" type="text" placeholder="${o.detail}" value="${multiDetails[q.id+'_'+o.v]||''}" onclick="event.stopPropagation()" onchange="multiDetails['${q.id}_${o.v}']=this.value">`:''}</div>`;
+        });
+        html+=`</div>`;
+      }
+      else {
+        // single select (radio) or scenario
+        html+=`<div class="opts">`;
+        q.opts.forEach((o,oi)=>{
+          const sel=answers[q.id+'_idx']===oi;
+          html+=`<div class="opt${sel?' selected':''}" onclick="selectOpt('${q.id}',${oi})">
+            <div class="radio"><div class="radio-dot"></div></div>
+            <div><span class="opt-label">${o.l}</span>${o.sub?`<div class="opt-sublabel">${o.sub}</div>`:''}</div>
+          </div>`;
+        });
+        html+=`</div>`;
+      }
+      html+=`</div>`; // close q-card
+    });
+    html+=`</div>`;
+  }
+  html+=`</div>`;
+  main.innerHTML=html;
+  updateUI();
+}
+
+function toggleMulti(qId,val){
+  if(!multiAnswers[qId])multiAnswers[qId]=[];
+  const idx=multiAnswers[qId].indexOf(val);
+  if(idx>-1)multiAnswers[qId].splice(idx,1); else multiAnswers[qId].push(val);
+}
+
+function selectOpt(qId,optIdx){
+  // find the question in SECTIONS
+  for(const s of SECTIONS){
+    if(!s.questions)continue;
+    const q=s.questions.find(x=>x.id===qId);
+    if(q){answers[qId]=q.opts[optIdx].v;answers[qId+'_idx']=optIdx;break;}
+  }
+  renderSection();
+}
+
+// ============================================================
+//  SCORING ENGINE
+// ============================================================
+function computeScores(){
+  // Numeric scores per section (A,B,C,D,E)
+  const secIds = {
+    A:['A1','A2','A3','A4','A5','A6'],
+    B:['B1','B2','B4'],
+    C:['C1','C2','C3','C4','C5','C6'],
+    D:['D1','D3','D4'],
+    E:['E1','E2','E3','E4']
+  };
+  const scores = {};
+  for(const sec in secIds){
+    let tot=0;
+    secIds[sec].forEach(qId=>{
+      const idx=answers[qId+'_idx'];
+      const q=findQ(qId);
+      if(q&&idx!==undefined&&q.opts[idx]){
+        const v=q.opts[idx].v;
+        if(typeof v==='number') tot+=v;
+      }
+    });
+    scores['sec_'+sec]=tot;
+  }
+  const total=scores.sec_A+scores.sec_B+scores.sec_C+scores.sec_D+scores.sec_E;
+  scores.total=total;
+
+  // Profile
+  let profile='';
+  if(total<=30) profile='Conservativo';
+  else if(total<=45) profile='Moderato';
+  else if(total<=60) profile='Bilanciato';
+  else if(total<=80) profile='Dinamico';
+  else profile='Aggressivo';
+  scores.profile=profile;
+
+  // Archetype (section H: count IND,DEL,PIA,OPP,GUA,SOC)
+  const hIds=['H1','H2','H3','H4','H5','H6'];
+  const arch={IND:0,DEL:0,PIA:0,OPP:0,GUA:0,SOC:0};
+  hIds.forEach(qId=>{
+    const v=answers[qId];
+    if(v&&arch[v]!==undefined) arch[v]++;
+  });
+  scores.archetypes=arch;
+  const maxVal=Math.max(...Object.values(arch));
+  const dominant=Object.entries(arch).filter(([,v])=>v===maxVal).map(([k])=>k);
+  scores.archetype_dominant=dominant.join('+');
+  const archNames={IND:'Indipendente',DEL:'Delegatore',PIA:'Pianificatore',OPP:'Opportunista',GUA:'Guardiano',SOC:'Sociale'};
+  scores.archetype_label=dominant.map(k=>archNames[k]||k).join(' / ');
+
+  // Coherence checks
+  const checks={};
+  // 1. Profilo coerente con orizzonte temporale (B1)
+  const b1=answers['B1']; const b1i=answers['B1_idx']!==undefined?answers['B1_idx']+1:null;
+  const profileRisk={Conservativo:1,Moderato:2,Bilanciato:3,Dinamico:4,Aggressivo:5};
+  const pr=profileRisk[profile]||0;
+  checks.c1_profilo_orizzonte = b1i===null ? 'N/D' : (pr<=2&&b1i>=3)||pr>=3 ? 'Sì' : 'No';
+
+  // 2. Tolleranza psicologica (C) coerente con esperienza (D)
+  const cMax=26, dMax=12;
+  const cPct=scores.sec_C/cMax, dPct=scores.sec_D/dMax;
+  checks.c2_tolleranza_esperienza = Math.abs(cPct-dPct)<0.35 ? 'Sì' : 'No';
+
+  // 3. Aspettative rendimento realistiche (E5)
+  const rendAtteso=parseFloat(answers['rendimento_atteso']);
+  const perditaMax=parseFloat(answers['perdita_max']);
+  if(isNaN(rendAtteso)||isNaN(perditaMax)){
+    checks.c3_aspettative_realistiche='N/D';
+  } else {
+    // Unrealistic: high return expectation with very low loss tolerance
+    checks.c3_aspettative_realistiche = (rendAtteso>8 && Math.abs(perditaMax)<10) ? 'No' : 'Sì';
+  }
+
+  // 4. Bias comportamentali significativi (E1+E2+E3)
+  const e1i=answers['E1_idx'],e2i=answers['E2_idx'],e3i=answers['E3_idx'];
+  let biasScore=0;
+  if(e1i!==undefined){const q=findQ('E1');if(q&&q.opts[e1i]&&q.opts[e1i].v<=2)biasScore++;}
+  if(e2i!==undefined){const q=findQ('E2');if(q&&q.opts[e2i]&&q.opts[e2i].v===1)biasScore++;}
+  if(e3i!==undefined){const q=findQ('E3');if(q&&q.opts[e3i]&&q.opts[e3i].v<=1)biasScore++;}
+  checks.c4_bias_significativi = biasScore>=2 ? 'Sì' : 'No';
+
+  // 5. Fondo emergenza adeguato (A5)
+  const a5i=answers['A5_idx'];
+  checks.c5_fondo_emergenza = a5i!==undefined ? (a5i>=2 ? 'Sì' : 'No') : 'N/D';
+
+  // 6. Concentrazione patrimonio (A4)
+  const a4i=answers['A4_idx'];
+  checks.c6_concentrazione = a4i!==undefined ? (a4i<=1 ? 'No' : 'Sì') : 'N/D';
+
+  // 7. Liquidità compatibile con profilo (F2 vs B1)
+  const f2i=answers['F2_idx'], f2v=f2i!==undefined?f2i+1:null;
+  checks.c7_liquidita_profilo = (f2v&&b1i) ? ((f2v<=2&&b1i>=3) ? 'No' : 'Sì') : 'N/D';
+
+  // 8. Archetipo coerente con profilo numerico
+  const archriskMap={GUA:1,DEL:2,PIA:3,SOC:3,IND:4,OPP:5};
+  const archRisk=archriskMap[dominant[0]]||3;
+  checks.c8_archetipo_profilo = Math.abs(archRisk-pr)<=2 ? 'Sì' : 'No';
+
+  // 9. Domande verifica conoscenza (D3,D4)
+  const d3i=answers['D3_idx'],d4i=answers['D4_idx'];
+  const d3q=findQ('D3'),d4q=findQ('D4');
+  const d3ok=d3i!==undefined&&d3q&&d3q.opts[d3i]&&d3q.opts[d3i].v===2;
+  const d4ok=d4i!==undefined&&d4q&&d4q.opts[d4i]&&d4q.opts[d4i].v===2;
+  const d1i=answers['D1_idx'];
+  checks.c9_conoscenza_dichiarata = (d1i===undefined)?'N/D':((d1i>=2&&d3ok&&d4ok)||(d1i<2))?'Sì':'No';
+
+  // 10. Archetipo Guardiano o Sociale → rischi specifici
+  checks.c10_rischi_guardiano_sociale = (dominant.includes('GUA')||dominant.includes('SOC')) ? 'Verificare' : 'N/A';
+
+  scores.checks=checks;
+  return scores;
+}
+
+function findQ(qId){
+  for(const s of SECTIONS){
+    if(!s.questions)continue;
+    const q=s.questions.find(x=>x.id===qId);
+    if(q)return q;
+  }
+  return null;
+}
+
+// ============================================================
+//  BUILD EXPORT PAYLOAD
+// ============================================================
+function buildPayload(){
+  const sc=computeScores();
+  const d=new Date();
+
+  // Collect all individual answers with labels
+  const rawAnswers={};
+  SECTIONS.forEach(s=>{
+    if(s.fields) s.fields.forEach(f=>{rawAnswers[f.id]=answers[f.id]||'';});
+    if(s.questions) s.questions.forEach(q=>{
+      if(q.type==='multi'){
+        rawAnswers[q.id]=(multiAnswers[q.id]||[]).join(', ');
+      } else if(q.type==='textarea'){
+        rawAnswers[q.id]=answers[q.id]||'';
+      } else if(q.type==='freetext'){
+        q.fields.forEach(f=>{rawAnswers[f.id]=answers[f.id]||'';});
+      } else {
+        const idx=answers[q.id+'_idx'];
+        rawAnswers[q.id]=(idx!==undefined&&q.opts&&q.opts[idx])?q.opts[idx].l:'';
+      }
+    });
+  });
+
+  return {
+    v:1,
+    data: d.toLocaleDateString('it-IT'),
+    nome: answers.nome||'',
+    email: answers.contatto||'',
+    risposte: rawAnswers,
+    punteggi:{
+      A: sc.sec_A, B: sc.sec_B, C: sc.sec_C, D: sc.sec_D, E: sc.sec_E,
+      totale: sc.total, profilo: sc.profile
+    },
+    archetipi: sc.archetypes,
+    archetipo_dominante: sc.archetype_dominant,
+    archetipo_label: sc.archetype_label,
+    check: sc.checks,
+    rendimento_atteso: answers.rendimento_atteso||'',
+    perdita_max: answers.perdita_max||''
+  };
+}
+
+// ============================================================
+//  SUBMISSION
+// ============================================================
+function closeModal(){document.getElementById('modalOverlay').classList.remove('active');}
+
+// Cache del payload e codice generati una sola volta
+let _cachedCode = null;
+let _cachedFilename = null;
+let _cachedText = null;
+
+function prepareSubmission(){
+  const payload = buildPayload();
+  const code = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const clientName = answers.nome || 'Cliente';
+  const filename = 'Profilazione_' + clientName.replace(/\s+/g,'_') + '_' + new Date().toISOString().split('T')[0] + '.txt';
+
+  let text = "═══════════════════════════════════════════════════\n";
+  text += "  QUESTIONARIO DI PROFILAZIONE DELL'INVESTITORE\n";
+  text += "═══════════════════════════════════════════════════\n\n";
+  text += "Data: " + payload.data + "  |  Cliente: " + payload.nome + "\n";
+  text += "Email: " + (payload.email || '') + "\n\n";
+
+  SECTIONS.forEach(s => {
+    text += "── " + s.title + " ──\n";
+    if(s.fields){
+      s.fields.forEach(f => {
+        text += "  " + f.label + ": " + (answers[f.id] || '(non compilato)') + "\n";
+      });
+    }
+    if(s.questions){
+      s.questions.forEach(q => {
+        text += "  " + q.id + ". ";
+        if(q.type === 'multi'){
+          const sel = multiAnswers[q.id] || [];
+          text += sel.length ? sel.map(v => { const o = q.opts.find(x => x.v === v); return o ? o.l : v; }).join(', ') : '(nessuna selezione)';
+        } else if(q.type === 'textarea'){
+          text += (answers[q.id] || '(non compilato)');
+        } else if(q.type === 'freetext'){
+          text += q.fields.map(f => f.label + ': ' + (answers[f.id] || '—')).join(' | ');
+        } else {
+          const idx = answers[q.id + '_idx'];
+          text += (idx !== undefined && q.opts && q.opts[idx]) ? q.opts[idx].l : '(non compilato)';
+        }
+        text += "\n";
+      });
+    }
+    text += "\n";
+  });
+
+  text += "── CODICE DATI (da incollare nel Google Sheet) ──\n";
+  text += code + "\n";
+
+  _cachedCode = code;
+  _cachedFilename = filename;
+  _cachedText = text;
+}
+
+function openCompletionModal(){
+  prepareSubmission();
+  document.getElementById('modalOverlay').classList.add('active');
+  // Reset copy button state
+  const btn = document.getElementById('btnCopiaCodice');
+  btn.classList.remove('copied');
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copia codice per Google Sheet';
+}
+
+function scaricaTxt(){
+  if(!_cachedText) prepareSubmission();
+  const blob = new Blob([_cachedText], {type: 'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = _cachedFilename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copiaCodice(){
+  if(!_cachedCode) prepareSubmission();
+  // Use modern clipboard API with fallback
+  const copyAndFeedback = () => {
+    const btn = document.getElementById('btnCopiaCodice');
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Codice copiato!';
+  };
+
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(_cachedCode).then(copyAndFeedback).catch(() => fallbackCopy());
+  } else {
+    fallbackCopy();
+  }
+
+  function fallbackCopy(){
+    const ta = document.createElement('textarea');
+    ta.value = _cachedCode;
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    copyAndFeedback();
+  }
+
+  // After copy, show thank you after short delay if user closes
+}
+
+// Called from footer button (last section)
+function completaQuestionario(){
+  openCompletionModal();
+}
+
+// Override the nav button behavior to call openCompletionModal on last section
+function updateUI(){
+  document.querySelectorAll('.nav-btn').forEach((b,i) => { b.classList.toggle('active', i === currentSection); });
+  buildDots();
+  let total = 0, done = 0;
+  SECTIONS.forEach(s => {
+    if(s.fields){ total += s.fields.length; s.fields.forEach(f => { if(answers[f.id]?.toString().trim()) done++; }); }
+    if(s.questions){ total += s.questions.length; s.questions.forEach(q => {
+      if(q.type === 'multi'){ if((multiAnswers[q.id] || []).length > 0) done++; }
+      else if(q.type === 'textarea'){ if(answers[q.id]?.trim()) done++; }
+      else if(q.type === 'freetext'){ if(q.fields.some(f => answers[f.id]?.toString().trim())) done++; }
+      else { if(answers[q.id] !== undefined) done++; }
+    }); }
+  });
+  const pct = Math.round(done / total * 100);
+  document.getElementById('pctLabel').textContent = pct + '%';
+  const c = 2 * Math.PI * 21;
+  document.getElementById('progressArc').setAttribute('stroke-dashoffset', c - (pct / 100) * c);
+  document.getElementById('btnPrev').disabled = currentSection === 0;
+  const btnNext = document.getElementById('btnNext');
+  if(currentSection === SECTIONS.length - 1){
+    btnNext.textContent = 'Completa';
+    btnNext.className = 'btn-nav btn-submit';
+    btnNext.onclick = completaQuestionario;
+  } else {
+    btnNext.textContent = 'Successivo →';
+    btnNext.className = 'btn-nav btn-next';
+    btnNext.onclick = goNext;
+  }
+}
+
+</script>
+</body>
+</html>
