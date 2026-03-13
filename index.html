@@ -63,6 +63,10 @@ main{flex:1;overflow-y:auto;padding:36px 28px 120px;max-width:760px;width:100%;m
 .fields-group{display:flex;flex-direction:column;gap:22px;margin-top:28px}
 .field-label{display:block;font-size:14px;color:#374151;font-weight:600;margin-bottom:8px;letter-spacing:.3px}
 .field-label .req{color:#2563eb}
+.q-card.missing{border:2px solid #ef4444!important;background:#fff5f5!important;animation:shakeMissing .3s ease;}
+.text-input.missing,.free-input.missing{border:2px solid #ef4444!important;background:#fff5f5!important;}
+@keyframes shakeMissing{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.q-card.missing .q-id{background:#ef4444;color:#fff;}
 .text-input{width:100%;padding:14px 18px;background:#fff;border:1.5px solid #d1d5db;border-radius:10px;color:#1a1a2e;font-size:16px;font-family:'Source Sans 3',sans-serif;transition:border-color .2s;outline:none}
 .text-input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
 .text-input::placeholder{color:#d1d5db}
@@ -498,11 +502,97 @@ function buildDots(){
 }
 
 function goToSection(i){
+  // Consenti sempre di tornare indietro; per andare avanti valida la sezione corrente
+  if(i > currentSection){
+    const missing = validateSection();
+    if(missing.length > 0){
+      highlightMissing(missing);
+      alert(`⚠️ Completa tutte le domande della sezione corrente prima di procedere.`);
+      return;
+    }
+  }
   currentSection=i;
   renderSection();
   document.getElementById('mainContent').scrollTop=0;
 }
-function goNext(){if(currentSection<SECTIONS.length-1){currentSection++;renderSection();document.getElementById('mainContent').scrollTop=0;}}
+function validateSection(){
+  const s = SECTIONS[currentSection];
+  const missing = [];
+
+  // anagrafica: campi text/email required
+  if(s.fields){
+    s.fields.forEach(f=>{
+      if(f.required && !(answers[f.id]||'').trim()){
+        missing.push({id:'field_'+f.id, label:f.label});
+      }
+    });
+  }
+
+  // domande
+  if(s.questions){
+    s.questions.forEach(q=>{
+      // textarea
+      if(q.type==='textarea'){
+        if(!(answers[q.id]||'').trim()) missing.push({id:q.id, label:q.id});
+      }
+      // multi (checkbox): almeno una selezione
+      else if(q.type==='multi'){
+        if(!(multiAnswers[q.id]&&multiAnswers[q.id].length>0)) missing.push({id:q.id, label:q.id});
+      }
+      // freetext: tutti i campi
+      else if(q.type==='freetext'){
+        q.fields.forEach(f=>{
+          if(!(answers[f.id]||'').trim()) missing.push({id:f.id, label:q.id+' – '+f.label});
+        });
+      }
+      // radio/scenario/default
+      else {
+        if(answers[q.id+'_idx']===undefined) missing.push({id:q.id, label:q.id});
+      }
+    });
+  }
+
+  return missing;
+}
+
+function highlightMissing(missing){
+  // Rimuovi highlight precedenti
+  document.querySelectorAll('.q-card.missing, .text-input.missing, input.missing').forEach(el=>{
+    el.classList.remove('missing');
+  });
+
+  missing.forEach(m=>{
+    // Cerca q-card per id domanda
+    const cards = document.querySelectorAll('.q-card');
+    cards.forEach(card=>{
+      const idEl = card.querySelector('.q-id');
+      if(idEl && idEl.textContent.trim()===m.label){
+        card.classList.add('missing');
+      }
+    });
+    // Cerca input/textarea diretti (anagrafica)
+    const el = document.getElementById(m.id);
+    if(el) el.classList.add('missing');
+  });
+
+  // Scroll alla prima domanda mancante
+  const first = document.querySelector('.q-card.missing, .text-input.missing');
+  if(first) first.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function goNext(){
+  const missing = validateSection();
+  if(missing.length > 0){
+    highlightMissing(missing);
+    const nomi = missing.map(m=>m.label).join(', ');
+    const msg = missing.length===1
+      ? `⚠️ La domanda ${nomi} è obbligatoria.\n\nCompleta la risposta per continuare.`
+      : `⚠️ ${missing.length} domande obbligatorie senza risposta:\n${nomi}\n\nCompletale per continuare.`;
+    alert(msg);
+    return;
+  }
+  if(currentSection<SECTIONS.length-1){currentSection++;renderSection();document.getElementById('mainContent').scrollTop=0;}
+}
 function goPrev(){if(currentSection>0){currentSection--;renderSection();document.getElementById('mainContent').scrollTop=0;}}
 
 // updateUI is defined in the SUBMISSION section below
@@ -537,7 +627,7 @@ function renderSection(){
   if(s.questions){
     html+=`<div class="questions-group">`;
     s.questions.forEach(q=>{
-      html+=`<div class="q-card"><div class="q-header"><span class="q-id">${q.id}</span><div><p class="q-text">${q.text}</p>${q.note?`<p class="q-note">${q.note}</p>`:''}</div></div>`;
+      html+=`<div class="q-card" id="qcard_${q.id}"><div class="q-header"><span class="q-id">${q.id}</span><div><p class="q-text">${q.text} <span style="color:#ef4444;font-weight:700">*</span></p>${q.note?`<p class="q-note">${q.note}</p>`:''}</div></div>`;
 
       if(q.type==='textarea'){
         html+=`<textarea class="text-input" rows="4" placeholder="Scriva qui la Sua risposta..." onchange="answers['${q.id}']=this.value;updateUI()">${answers[q.id]||''}</textarea>`;
@@ -872,6 +962,12 @@ function copiaCodice(){
 
 // Called from footer button (last section)
 function completaQuestionario(){
+  const missing = validateSection();
+  if(missing.length > 0){
+    highlightMissing(missing);
+    alert("⚠️ Completa tutte le domande obbligatorie prima di inviare.");
+    return;
+  }
   openCompletionModal();
 }
 
