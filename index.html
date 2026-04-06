@@ -1070,27 +1070,13 @@ function completaQuestionario(){
     note_consulente: noteConsulente
   };
 
-  // Invio via form submit tradizionale — bypassa CORB e CSP
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = WEBHOOK_URL;
-  form.target = 'hidden_iframe';
-  form.style.display = 'none';
+  // Invio via GET con tag img — bypassa CSP di GitHub Pages
+  const code64 = encodeURIComponent(JSON.stringify(invioData));
+  const url = WEBHOOK_URL + '?data=' + code64;
+  const img = new Image();
+  img.src = url;
 
-  const input = document.createElement('input');
-  input.type = 'hidden';
-  input.name = 'data';
-  input.value = JSON.stringify(invioData);
-  form.appendChild(input);
-
-  const iframe = document.createElement('iframe');
-  iframe.name = 'hidden_iframe';
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-  document.body.appendChild(form);
-  form.submit();
-
-  setTimeout(() => mostraFeedback(payload, sc), 500);
+  setTimeout(() => mostraFeedback(payload, sc), 1000);
 }
 
 function mostraFeedback(payload, sc){
