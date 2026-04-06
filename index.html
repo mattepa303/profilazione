@@ -1069,13 +1069,14 @@ function completaQuestionario(){
     note_consulente: noteConsulente
   };
 
-fetch(WEBHOOK_URL, {
+  fetch(WEBHOOK_URL, {
     method: 'POST',
     headers: {'Content-Type': 'text/plain'},
     body: JSON.stringify(invioData)
   })
   .then(() => mostraFeedback(payload, sc))
   .catch(() => mostraFeedback(payload, sc));
+}
 
 function mostraFeedback(payload, sc){
   document.getElementById('modalOverlay').classList.remove('active');
