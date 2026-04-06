@@ -1069,21 +1069,13 @@ function completaQuestionario(){
     note_consulente: noteConsulente
   };
 
-  fetch(WEBHOOK_URL, {
+fetch(WEBHOOK_URL, {
     method: 'POST',
-    mode: 'no-cors',
-    headers: {'Content-Type': 'application/json'},
+    headers: {'Content-Type': 'text/plain'},
     body: JSON.stringify(invioData)
   })
-  .then(() => {
-    // no-cors non restituisce body — consideriamo successo
-    mostraFeedback(payload, sc);
-  })
-  .catch(() => {
-    // In caso di errore di rete, mostriamo comunque il feedback
-    mostraFeedback(payload, sc);
-  });
-}
+  .then(() => mostraFeedback(payload, sc))
+  .catch(() => mostraFeedback(payload, sc));
 
 function mostraFeedback(payload, sc){
   document.getElementById('modalOverlay').classList.remove('active');
