@@ -193,38 +193,41 @@ footer{padding:16px 28px;border-top:1px solid #e5e7eb;background:#fff;display:fl
   </footer>
 </div>
 
-<!-- ===== COMPLETION MODAL ===== -->
+<!-- ===== COMPLETION MODAL (invio in corso) ===== -->
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <div style="width:52px;height:52px;border-radius:50%;background:#eff6ff;border:2px solid #2563eb;display:flex;align-items:center;justify-content:center;margin-bottom:20px">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>
+  <div class="modal" style="text-align:center">
+    <div style="width:52px;height:52px;border-radius:50%;background:#eff6ff;border:2px solid #2563eb;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+      <svg id="modalIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
     </div>
-    <h3>Questionario completato</h3>
-    <p>Scarichi il file con le Sue risposte e copi il codice dati da consegnare al consulente.</p>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
-      <button onclick="scaricaTxt()" class="btn-action-primary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Scarica il file .txt
-      </button>
-      <button onclick="copiaCodice()" class="btn-action-secondary" id="btnCopiaCodice">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copia codice per Google Sheet
-      </button>
-    </div>
-    <button onclick="closeModal()" style="margin-top:16px;width:100%;padding:11px;background:transparent;border:1.5px solid #e5e7eb;border-radius:10px;color:#9ca3af;font-size:14px;font-family:'Source Sans 3',sans-serif;cursor:pointer">Chiudi</button>
+    <h3 id="modalTitle">Invio in corso…</h3>
+    <p id="modalMsg" style="color:#6b7280;font-size:15px;line-height:1.65">Stiamo inviando le sue risposte in modo sicuro. Attenda un momento.</p>
   </div>
 </div>
 
 <!-- ===== THANK YOU ===== -->
 <div class="thankyou" id="thankyou">
-  <div class="thankyou-inner">
+  <div class="thankyou-inner" style="max-width:560px">
     <div class="check-ring">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round">
         <path d="M5 13l4 4L19 7" style="stroke-dasharray:50;animation:checkAnim .6s ease-out .3s both"/>
       </svg>
     </div>
-    <h2>Grazie per la collaborazione</h2>
-    <p>Il questionario è stato completato correttamente. Il file è stato scaricato e il codice copiato è pronto da consegnare al consulente.</p>
+    <h2 style="margin-bottom:8px">Grazie per la collaborazione</h2>
+    <p style="margin-bottom:32px;color:#6b7280">Le risposte sono state ricevute correttamente. Ecco un primo profilo emerso dalla sua compilazione.</p>
+
+    <!-- PROFILO BOX -->
+    <div id="feedbackBox" style="background:#fff;border:1.5px solid #e5e7eb;border-radius:16px;padding:28px;text-align:left;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+      <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#2563eb;font-weight:600;margin-bottom:6px">Il suo profilo</div>
+      <div id="fb_profilo" style="font-family:'Libre Baskerville',serif;font-size:26px;font-weight:400;color:#1a1a2e;margin-bottom:4px"></div>
+      <div id="fb_archetipo" style="font-size:14px;color:#6b7280;margin-bottom:20px"></div>
+      <div id="fb_frase" style="font-size:16px;color:#374151;line-height:1.7;border-left:3px solid #2563eb;padding-left:16px;font-style:italic;margin-bottom:24px"></div>
+
+      <!-- BIAS TEASER -->
+      <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#2563eb;font-weight:600;margin-bottom:12px">Caratteristiche rilevate</div>
+      <div id="fb_bias" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <p style="font-size:14px;color:#9ca3af;line-height:1.65">Per approfondire il suo profilo e ricevere un'analisi completa, il consulente la contatterà nelle prossime ore.</p>
   </div>
 </div>
 
@@ -237,7 +240,8 @@ const SECTIONS = [
     id:"anagrafica", title:"Dati", icon:"👤",
     fields:[
       {id:"nome",label:"Nome",type:"text",required:true},
-      {id:"contatto",label:"E-mail",type:"email",required:true}
+      {id:"contatto",label:"E-mail",type:"email",required:true},
+      {id:"anno_nascita",label:"Anno di nascita",type:"number",required:true,min:1930,max:2005}
     ]
   },
   {
@@ -615,9 +619,10 @@ function renderSection(){
   if(s.fields){
     html+=`<div class="fields-group">`;
     s.fields.forEach(f=>{
+      const extraAttrs = f.type==='number' ? `min="${f.min||1900}" max="${f.max||2010}"` : '';
       html+=`<div>
         <label class="field-label">${f.label}${f.required?' <span class="req">*</span>':''}</label>
-        <input class="text-input" type="${f.type}" id="field_${f.id}" value="${answers[f.id]||''}" onchange="answers['${f.id}']=this.value;updateUI()" placeholder="">
+        <input class="text-input" type="${f.type}" id="field_${f.id}" value="${answers[f.id]||''}" ${extraAttrs} onchange="answers['${f.id}']=this.value;updateUI()" placeholder="${f.type==='number'?'es. 1980':''}">
       </div>`;
     });
     html+=`</div>`;
@@ -742,11 +747,16 @@ function computeScores(){
 
   // Coherence checks
   const checks={};
-  // 1. Profilo coerente con orizzonte temporale (B1)
+  // 1. Profilo coerente con orizzonte temporale (B1) + età
   const b1=answers['B1']; const b1i=answers['B1_idx']!==undefined?answers['B1_idx']+1:null;
   const profileRisk={Conservativo:1,Moderato:2,Bilanciato:3,Dinamico:4,Aggressivo:5};
   const pr=profileRisk[profile]||0;
-  checks.c1_profilo_orizzonte = b1i===null ? 'N/D' : (pr<=2&&b1i>=3)||pr>=3 ? 'Sì' : 'No';
+  const eta = answers.anno_nascita ? (new Date().getFullYear() - parseInt(answers.anno_nascita)) : null;
+  // Se età > 65 e profilo Dinamico/Aggressivo con orizzonte corto → tensione
+  let c1ok = b1i===null ? 'N/D' : (pr<=2&&b1i>=3)||pr>=3 ? 'Sì' : 'No';
+  if(eta && eta > 65 && pr >= 4 && b1i && b1i <= 2) c1ok = 'No'; // anziano, alto rischio, orizzonte corto
+  if(eta && eta < 35 && pr <= 2 && b1i && b1i >= 4) c1ok = 'Attenzione'; // giovane, profilo molto conservativo con orizzonte lungo
+  checks.c1_profilo_orizzonte = c1ok;
 
   // 2. Tolleranza psicologica (C) coerente con esperienza (D)
   const cMax=26, dMax=12;
@@ -842,6 +852,8 @@ function buildPayload(){
     data: d.toLocaleDateString('it-IT'),
     nome: answers.nome||'',
     email: answers.contatto||'',
+    anno_nascita: answers.anno_nascita||'',
+    eta: answers.anno_nascita ? (new Date().getFullYear() - parseInt(answers.anno_nascita)) : '',
     risposte: rawAnswers,
     punteggi:{
       A: sc.sec_A, B: sc.sec_B, C: sc.sec_C, D: sc.sec_D, E: sc.sec_E,
@@ -857,110 +869,182 @@ function buildPayload(){
 }
 
 // ============================================================
-//  SUBMISSION
+//  WEBHOOK URL — sostituire con l'URL del Web App deployato
+// ============================================================
+const WEBHOOK_URL = '1DWAc_CQSMPXGKdnXgt6olC5zTsaztvgXq42Vbv0hY-YAtTasfkoGX8rV';
+
+// ============================================================
+//  FEEDBACK ENGINE
+// ============================================================
+const archFrasi = {
+  'DEL': 'Lei preferisce delegare le decisioni operative a professionisti di fiducia, mantenendo una visione d\'insieme sul suo patrimonio. La chiarezza del piano e la fiducia nel consulente sono elementi centrali del suo approccio.',
+  'PIA': 'Lei è un investitore metodico: ama avere obiettivi definiti, scadenze chiare e un piano strutturato. Le decisioni impulsive non fanno parte del suo stile.',
+  'OPP': 'Lei ha un buon istinto per cogliere le opportunità di mercato e non si spaventa di fronte alla volatilità. Quando vede un\'occasione, è pronto ad agire.',
+  'IND': 'Lei segue i mercati con attenzione e ama capire in profondità le logiche degli investimenti prima di decidere. L\'autonomia informativa è importante per lei.',
+  'GUA': 'La protezione del patrimonio è la sua priorità assoluta. Preferisce la sicurezza alla performance, e questo è un approccio legittimo e coerente.',
+  'SOC': 'Le relazioni di fiducia sono centrali nelle sue scelte finanziarie. Il passaparola e la reputazione contano più dei numeri sulla carta.'
+};
+
+const profileFrasi = {
+  'Conservativo': 'Il suo profilo indica una forte preferenza per la stabilità. Il capitale va preservato prima di tutto.',
+  'Moderato': 'Il suo profilo è equilibrato verso la prudenza. Crescita misurata, volatilità contenuta.',
+  'Bilanciato': 'Il suo profilo ricerca un equilibrio tra crescita e protezione, con una tolleranza moderata alle oscillazioni.',
+  'Dinamico': 'Il suo profilo accetta oscillazioni significative in cambio di rendimenti superiori nel medio-lungo periodo.',
+  'Aggressivo': 'Il suo profilo è orientato alla massimizzazione del rendimento con piena consapevolezza del rischio.'
+};
+
+const biasMap = {
+  overconfidence: {
+    label: 'Tendenza all\'overconfidence',
+    desc: 'Il suo questionario ha evidenziato una tendenza a sovrastimare le proprie capacità predittive sui mercati. È una delle caratteristiche più comuni tra gli investitori esperti — e può essere sia un punto di forza che un rischio da gestire.'
+  },
+  disposition: {
+    label: 'Effetto disposizione',
+    desc: 'Il suo questionario ha evidenziato una possibile difficoltà nel liquidare posizioni in perdita. Tendiamo a tenere i "perdenti" troppo a lungo sperando nel recupero — un bias documentato che può pesare significativamente sulla performance.'
+  },
+  averaging: {
+    label: 'Tendenza al mediare al ribasso',
+    desc: 'Il suo questionario ha evidenziato una propensione ad aumentare la posizione su titoli in calo. Questa strategia può essere efficace se basata su analisi fondamentale solida, ma può amplificare le perdite se applicata in modo sistematico.'
+  },
+  lossAversion: {
+    label: 'Avversione alle perdite',
+    desc: 'Il suo questionario ha evidenziato una sensibilità alle perdite superiore alla media. Le perdite pesano psicologicamente più dei guadagni equivalenti — un fenomeno normale, ma che può influenzare le decisioni nei momenti di volatilità.'
+  }
+};
+
+function detectBias(sc){
+  const biases = [];
+  // Overconfidence: C1 alta + D bassa (pensa di fare bene ma conosce poco)
+  const c1i = answers['C1_idx'];
+  if(c1i !== undefined && c1i >= 2 && sc.sec_D <= 4) biases.push('overconfidence');
+  // Disposition effect: E3 bassa (non vende i perdenti) + E4 alta (vende i vincitori)
+  const e3i = answers['E3_idx'], e4i = answers['E4_idx'];
+  if(e3i !== undefined && e4i !== undefined && e3i <= 1 && e4i >= 2) biases.push('disposition');
+  // Averaging: C1 molto alta (compra sui ribassi automaticamente)
+  if(c1i !== undefined && c1i === 3) biases.push('averaging');
+  // Loss aversion: C4 bassa + perdita_max molto bassa rispetto rendimento atteso
+  const c4i = answers['C4_idx'];
+  const rend = parseFloat(answers['rendimento_atteso']||0);
+  const loss = parseFloat(answers['perdita_max']||0);
+  if(c4i !== undefined && c4i <= 1 && loss < rend * 0.8) biases.push('lossAversion');
+  // Garantiamo almeno 2 bias mostrati prendendo i più rilevanti
+  if(biases.length === 0) biases.push('overconfidence','lossAversion');
+  else if(biases.length === 1){
+    const fallback = biases[0]==='overconfidence' ? 'lossAversion' : 'overconfidence';
+    biases.push(fallback);
+  }
+  return biases.slice(0,2);
+}
+
+function renderFeedback(payload, sc){
+  const profile = sc.profile;
+  const dominant = sc.archetype_dominant.split('+');
+  const archLabel = sc.archetype_label;
+
+  document.getElementById('fb_profilo').textContent = profile + ' — ' + archLabel;
+  document.getElementById('fb_archetipo').textContent = 'Punteggio: ' + sc.total + '/97';
+
+  // Frase archetipo (primo dominante)
+  const frase = archFrasi[dominant[0]] || profileFrasi[profile] || '';
+  document.getElementById('fb_frase').textContent = frase;
+
+  // Bias teaser
+  const biases = detectBias(sc);
+  const biasContainer = document.getElementById('fb_bias');
+  biasContainer.innerHTML = biases.map(b => {
+    const info = biasMap[b];
+    return `<div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px">
+      <div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:4px">${info.label}</div>
+      <div style="font-size:14px;color:#6b7280;line-height:1.6">${info.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+//  BUILD TRANSCRIPT (domande + risposte per email)
+// ============================================================
+function buildTranscript(payload){
+  let txt = '';
+  SECTIONS.forEach(s => {
+    txt += `\n── ${s.title} ──\n`;
+    if(s.fields) s.fields.forEach(f => {
+      txt += `  ${f.label}: ${answers[f.id]||'(non compilato)'}\n`;
+    });
+    if(s.questions) s.questions.forEach(q => {
+      txt += `  ${q.id}. `;
+      if(q.type==='multi'){
+        const sel=multiAnswers[q.id]||[];
+        txt += sel.length ? sel.map(v=>{const o=q.opts.find(x=>x.v===v);return o?o.l:v;}).join(', ') : '(nessuna selezione)';
+      } else if(q.type==='textarea'){
+        txt += answers[q.id]||'(non compilato)';
+      } else if(q.type==='freetext'){
+        txt += q.fields.map(f=>f.label+': '+(answers[f.id]||'—')).join(' | ');
+      } else {
+        const idx=answers[q.id+'_idx'];
+        txt += (idx!==undefined&&q.opts&&q.opts[idx])?q.opts[idx].l:'(non compilato)';
+      }
+      txt += '\n';
+    });
+  });
+  return txt;
+}
+
+// ============================================================
+//  BUILD NOTE CONSULENTE (bias + suggerimenti call calibrati)
+// ============================================================
+function buildNoteConsulente(payload, sc){
+  const profile = sc.profile;
+  const dominant = sc.archetype_dominant.split('+');
+  const archLabel = sc.archetype_label;
+  const eta = payload.eta || '?';
+  const biases = detectBias(sc);
+
+  const callSuggerimenti = {
+    DEL: 'Il cliente delega — non sommergerlo di dettagli tecnici. Presentare prima la view macro, poi lo strumento. Costruire fiducia prima di tutto.',
+    PIA: 'Il cliente vuole un piano chiaro con obiettivi e scadenze. Portare in call una struttura definita: timeline, target, scenario. Non lasciare nulla di vago.',
+    OPP: 'Il cliente è sensibile alle opportunità. Portare in call un\'idea concreta su cui ragionare — certificate, settore specifico, finestra temporale. Stimolare, non solo rassicurare.',
+    IND: 'Il cliente si informa da solo. Non semplificare troppo — apprezza la profondità. Portare dati, fonti, razionale. Essere pronti a rispondere a domande tecniche.',
+    GUA: 'Il cliente ha paura di perdere. Iniziare sempre dalla protezione del capitale, poi parlare di rendimento. Non usare mai la parola "rischio" senza subito associarla a una mitigazione.',
+    SOC: 'Il cliente dà peso alla relazione personale. Investire tempo nel rapport, chiedere della famiglia, degli obiettivi di vita. Lo strumento viene dopo.'
+  };
+
+  const biasCallNote = {
+    overconfidence: 'OVERCONFIDENCE rilevato: il cliente tende a sovrastimare le proprie capacità predittive. Non contraddirlo frontalmente — usare domande socratiche ("come mai in quel caso non ha funzionato?"). Valorizzare il valore della diversificazione come scelta razionale, non come ammissione di ignoranza.',
+    disposition: 'DISPOSITION EFFECT rilevato: il cliente fatica a realizzare perdite. In call, affrontare il tema con un esempio pratico ("se avesse investito in X e fosse sceso del 30%, cosa avrebbe fatto?"). Introdurre il concetto di costo opportunità.',
+    averaging: 'AVERAGING rilevato: il cliente è incline ad aumentare posizioni sui ribassi. Valorizzare questa tendenza ma aggiungere disciplina: definire in anticipo un piano di entrata scaglionata con limiti chiari.',
+    lossAversion: 'LOSS AVERSION rilevata: il cliente sente le perdite più dei guadagni equivalenti. Usare framing positivo ("proteggere il capitale" invece di "evitare perdite"). Mostrare dati storici su recupero dei mercati per ancorare le aspettative.'
+  };
+
+  let note = `══════════════════════════════════════════\n`;
+  note += `  NOTE CONSULENTE — ${payload.nome}\n`;
+  note += `══════════════════════════════════════════\n\n`;
+  note += `Profilo: ${profile} ${sc.total}/97\n`;
+  note += `Archetipo: ${archLabel}\n`;
+  note += `Età: ${eta} anni | Rendimento atteso: ${payload.rendimento_atteso}% | Perdita max: ${payload.perdita_max}%\n\n`;
+
+  note += `── APPROCCIO CONSIGLIATO PER LA CALL ──\n`;
+  dominant.forEach(d => {
+    if(callSuggerimenti[d]) note += `[${d}] ${callSuggerimenti[d]}\n\n`;
+  });
+
+  note += `── BIAS RILEVATI ──\n`;
+  biases.forEach(b => {
+    if(biasCallNote[b]) note += `${biasCallNote[b]}\n\n`;
+  });
+
+  note += `── CHECK DI COERENZA ──\n`;
+  Object.entries(sc.checks).forEach(([k,v]) => {
+    note += `  ${k}: ${v}\n`;
+  });
+
+  return note;
+}
+
+// ============================================================
+//  SUBMISSION — Webhook + Feedback
 // ============================================================
 function closeModal(){document.getElementById('modalOverlay').classList.remove('active');}
 
-// Cache del payload e codice generati una sola volta
-let _cachedCode = null;
-let _cachedFilename = null;
-let _cachedText = null;
-
-function prepareSubmission(){
-  const payload = buildPayload();
-  const code = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  const clientName = answers.nome || 'Cliente';
-  const filename = 'Profilazione_' + clientName.replace(/\s+/g,'_') + '_' + new Date().toISOString().split('T')[0] + '.txt';
-
-  let text = "═══════════════════════════════════════════════════\n";
-  text += "  QUESTIONARIO DI PROFILAZIONE DELL'INVESTITORE\n";
-  text += "═══════════════════════════════════════════════════\n\n";
-  text += "Data: " + payload.data + "  |  Cliente: " + payload.nome + "\n";
-  text += "Email: " + (payload.email || '') + "\n\n";
-
-  SECTIONS.forEach(s => {
-    text += "── " + s.title + " ──\n";
-    if(s.fields){
-      s.fields.forEach(f => {
-        text += "  " + f.label + ": " + (answers[f.id] || '(non compilato)') + "\n";
-      });
-    }
-    if(s.questions){
-      s.questions.forEach(q => {
-        text += "  " + q.id + ". ";
-        if(q.type === 'multi'){
-          const sel = multiAnswers[q.id] || [];
-          text += sel.length ? sel.map(v => { const o = q.opts.find(x => x.v === v); return o ? o.l : v; }).join(', ') : '(nessuna selezione)';
-        } else if(q.type === 'textarea'){
-          text += (answers[q.id] || '(non compilato)');
-        } else if(q.type === 'freetext'){
-          text += q.fields.map(f => f.label + ': ' + (answers[f.id] || '—')).join(' | ');
-        } else {
-          const idx = answers[q.id + '_idx'];
-          text += (idx !== undefined && q.opts && q.opts[idx]) ? q.opts[idx].l : '(non compilato)';
-        }
-        text += "\n";
-      });
-    }
-    text += "\n";
-  });
-
-  text += "── CODICE DATI (da incollare nel Google Sheet) ──\n";
-  text += code + "\n";
-
-  _cachedCode = code;
-  _cachedFilename = filename;
-  _cachedText = text;
-}
-
-function openCompletionModal(){
-  prepareSubmission();
-  document.getElementById('modalOverlay').classList.add('active');
-  // Reset copy button state
-  const btn = document.getElementById('btnCopiaCodice');
-  btn.classList.remove('copied');
-  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copia codice per Google Sheet';
-}
-
-function scaricaTxt(){
-  if(!_cachedText) prepareSubmission();
-  const blob = new Blob([_cachedText], {type: 'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = _cachedFilename; a.click();
-  URL.revokeObjectURL(url);
-}
-
-function copiaCodice(){
-  if(!_cachedCode) prepareSubmission();
-  // Use modern clipboard API with fallback
-  const copyAndFeedback = () => {
-    const btn = document.getElementById('btnCopiaCodice');
-    btn.classList.add('copied');
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Codice copiato!';
-  };
-
-  if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(_cachedCode).then(copyAndFeedback).catch(() => fallbackCopy());
-  } else {
-    fallbackCopy();
-  }
-
-  function fallbackCopy(){
-    const ta = document.createElement('textarea');
-    ta.value = _cachedCode;
-    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
-    document.body.appendChild(ta);
-    ta.focus(); ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    copyAndFeedback();
-  }
-
-  // After copy, show thank you after short delay if user closes
-}
-
-// Called from footer button (last section)
 function completaQuestionario(){
   const missing = validateSection();
   if(missing.length > 0){
@@ -968,7 +1052,46 @@ function completaQuestionario(){
     alert("⚠️ Completa tutte le domande obbligatorie prima di inviare.");
     return;
   }
-  openCompletionModal();
+
+  // Mostra modal "invio in corso"
+  document.getElementById('modalOverlay').classList.add('active');
+
+  const payload = buildPayload();
+  const sc = computeScores();
+  const code = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const transcript = buildTranscript(payload);
+  const noteConsulente = buildNoteConsulente(payload, sc);
+
+  const invioData = {
+    payload: payload,
+    codice_base64: code,
+    transcript: transcript,
+    note_consulente: noteConsulente
+  };
+
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(invioData)
+  })
+  .then(() => {
+    // no-cors non restituisce body — consideriamo successo
+    mostraFeedback(payload, sc);
+  })
+  .catch(() => {
+    // In caso di errore di rete, mostriamo comunque il feedback
+    mostraFeedback(payload, sc);
+  });
+}
+
+function mostraFeedback(payload, sc){
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('landing').style.display = 'none';
+  const ty = document.getElementById('thankyou');
+  ty.classList.add('active');
+  renderFeedback(payload, sc);
 }
 
 // Override the nav button behavior to call openCompletionModal on last section
