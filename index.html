@@ -1059,7 +1059,7 @@ function completaQuestionario(){
 
   const payload = buildPayload();
   const sc = computeScores();
-  const code = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const code = btoa(encodeURIComponent(JSON.stringify(payload)).replace(/%([0-9A-F]{2})/g, (m,p)=>String.fromCharCode('0x'+p)));
   const transcript = buildTranscript(payload);
   const noteConsulente = buildNoteConsulente(payload, sc);
 
@@ -1070,10 +1070,13 @@ function completaQuestionario(){
     note_consulente: noteConsulente
   };
 
+  const formData = new FormData();
+  formData.append('data', JSON.stringify(invioData));
+
   fetch(WEBHOOK_URL, {
     method: 'POST',
-    headers: {'Content-Type': 'text/plain'},
-    body: JSON.stringify(invioData)
+    mode: 'no-cors',
+    body: formData
   })
   .then(() => mostraFeedback(payload, sc))
   .catch(() => mostraFeedback(payload, sc));
