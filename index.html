@@ -1070,16 +1070,27 @@ function completaQuestionario(){
     note_consulente: noteConsulente
   };
 
-  const formData = new FormData();
-  formData.append('data', JSON.stringify(invioData));
+  // Invio via form submit tradizionale — bypassa CORB e CSP
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = WEBHOOK_URL;
+  form.target = 'hidden_iframe';
+  form.style.display = 'none';
 
-  fetch(WEBHOOK_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    body: formData
-  })
-  .then(() => mostraFeedback(payload, sc))
-  .catch(() => mostraFeedback(payload, sc));
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'data';
+  input.value = JSON.stringify(invioData);
+  form.appendChild(input);
+
+  const iframe = document.createElement('iframe');
+  iframe.name = 'hidden_iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  document.body.appendChild(form);
+  form.submit();
+
+  setTimeout(() => mostraFeedback(payload, sc), 500);
 }
 
 function mostraFeedback(payload, sc){
